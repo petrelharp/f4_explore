@@ -1,0 +1,24 @@
+// set up a simple neutral simulation
+initialize() {
+    initializeTreeSeq();
+	initializeMutationRate(1e-8);
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElement(g1, 0, 1e7);
+	initializeRecombinationRate(1e-8);
+	defineConstant("N", 500);
+    catn("Admixture proportion will be: " + P);
+}
+1 { sim.addSubpop("p1", N); }
+4000{sim.addSubpopSplit("p2", N, p1);}
+6000{sim.addSubpopSplit("p3", N, p2);}
+8000{sim.addSubpopSplit("p4", N, p3);}
+
+9000 {	p3.setMigrationRates(p2, P); }
+9001 {	p3.setMigrationRates(p2, 0.0); }
+
+10000 late() {
+//	g = c(p1, p2, p3, p4).sampleIndividuals(10).genomes;
+//	g.outputVCF(filePath = "/Users/mandiedriskill/Desktop/UO/Rotation/test50p2p3.vcf");
+	sim.treeSeqOutput("intro_" + getSeed() + "_" + P + ".trees");
+}
